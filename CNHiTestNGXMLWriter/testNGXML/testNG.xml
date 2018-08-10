@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><!--DOCTYPE suite SYSTEM'http://testng.org/testng-1.0.dtd'--><suite name="CNHi_TestSuite" parallel="none" thread-count="1">
+<test name="CNHi Test">
+<parameter name="appType" value="WEB"/>
+<parameter name="browser" value="Firefox"/>
+<parameter name="browserVersion" value="66.0.3359.181"/>
+<parameter name="platform" value="Windows"/>
+<classes>
+<class name="com.test.CNHi.testSuite.TestPlan">
+<methods>
+<include name="CNHi_Rest_Assured_GET"/>
+<include name="CNHiFleetAPPLoginTest"/>
+</methods>
+</class>
+</classes>
+</test>
+</suite>

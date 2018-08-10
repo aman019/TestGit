@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This build file will compile and create TestNgXML after parsing the jira exported XML. At the end of the successful
+compilation testNGXML will be copied at the Application layer project. -->
+
+<project basedir="." default="TestWriteXml" name="CNHiTestNGXMLWriter">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../eclipse/"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="CNHiTestNGXMLWriter.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="libs/joda-time-1.6.2.jar"/>
+        <pathelement location="libs/commons-httpclient-3.1.0.jar"/>
+        <pathelement location="libs/org-apache-commons-logging.jar"/>
+        <pathelement location="libs/org.json-20120521.jar"/>
+        <pathelement location="libs/java-json.jar"/>
+        <pathelement location="libs/jettison-1.3.jar"/>
+        <pathelement location="libs/selenium-server-standalone-2.44.0.jar"/>
+        <pathelement location="libs/jersey-client-1.5.jar"/>
+        <pathelement location="libs/jersey-apache-client-1.5.jar"/>
+        <pathelement location="libs/jersey-core-1.5.jar"/>
+        <pathelement location="libs/jersey-json-1.5.jar"/>
+        <pathelement location="libs/slf4j-api-1.7.2.jar"/>
+        <pathelement location="libs/jira-rest-java-client-1.2-m01.jar"/>
+        <pathelement location="libs/log4j-1.2.16.jar"/>
+    </path>
+
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+
+    <target depends="clean" name="cleanall"/>
+
+    <target depends="build-subprojects,build-project" name="build"/>
+
+    <target name="build-subprojects"/>
+
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="CNHiTestNGXMLWriter.classpath"/>
+        </javac>
+    </target>
+
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+
+    <target depends="build" name="TestWriteXml">
+        <java classname="com.integration.CNHi.jira.TestWriteXml" failonerror="true" fork="yes">
+            <classpath refid="CNHiTestNGXMLWriter.classpath"/>
+        </java>
+
+    	<copy todir="D:/Aman/cnhiProject/CNHiTestAutomationProject" verbose="yes" flatten="yes" failonerror="no">
+    		    	   <fileset dir="D:/Aman/cnhiProject/CNHiTestNGXMLWriter/testNGXML">
+    		    	      <include name="*.xml" />
+    		    	   </fileset>
+    		    	</copy>
+    </target>
+
+</project>
